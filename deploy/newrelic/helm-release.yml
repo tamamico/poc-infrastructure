@@ -28,12 +28,10 @@ spec:
         kind: HelmRepository
         name: newrelic
         namespace: newrelic
-      interval: 5m
-      valuesFiles:
-        - values.yml
+      interval: 1m
       valuesFrom:
         - kind: ConfigMap
-        - name: newrelic
+          name: newrelic
         - kind: Secret
           name: newrelic
   releaseName: newrelic
