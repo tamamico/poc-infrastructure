@@ -22,7 +22,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: newrelic/nri-bundle
+      chart: nri-bundle
       version: 5.0.107
       sourceRef:
         kind: HelmRepository
