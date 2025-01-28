@@ -31,7 +31,7 @@ data "kubernetes_namespace" "poc" {
   }
 }
 
-resource "kubernetes_config_map" "poc-settings" {
+resource "kubernetes_config_map" "settings" {
   metadata {
     name      = "settings"
     namespace = data.kubernetes_namespace.poc.id
