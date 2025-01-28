@@ -22,7 +22,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: nri-bundle
+      chart: newrelic/nri-bundle
       version: 5.0.107
       sourceRef:
         kind: HelmRepository
@@ -34,6 +34,6 @@ spec:
           name: newrelic
         - kind: Secret
           name: newrelic
-  releaseName: newrelic
+  releaseName: newrelic-bundle
   values:
     replicaCount: 1
