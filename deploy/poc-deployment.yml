@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-scs-native
+  namespace: poc
+  labels:
+    app: poc-scs-native
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poc-scs-native
+  template:
+    metadata:
+      labels:
+        app: poc-scs-native
+    spec:
+      serviceAccountName: poc-user
+      volumes:
+        - name: secrets
+          secret:
+            secretName: secrets
+      containers:
+        - name: poc-scs-native
+          image: ghcr.io/tamamico/poc-scs-native:0.1.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "1G"
+              cpu: "500m"
+              ephemeral-storage: "512M"
+            limits:
+              memory: "2G"
+              cpu: "1"
+              ephemeral-storage: "1G"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: secrets
+              readOnly: true
+              mountPath: /etc/secrets/poc

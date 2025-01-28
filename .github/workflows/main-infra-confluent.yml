@@ -1,0 +1,70 @@
+name: Update Confluent infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/confluent/**'
+      - '.github/workflows/main-infra-confluent.yml'
+      - '.github/actions/terraform/action.yml'
+  workflow_dispatch:
+
+jobs:
+  sonar:
+    name: Run SonarCloud analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Run SonarCloud analysis
+        uses: sonarsource/sonarqube-scan-action@v4.2.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: ./infrastructure/confluent
+          args: >
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_INFRA }}
+  update-kafka:
+    name: Update Kafka infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set-up staging environment
+        uses: ./.github/actions/terraform
+        with:
+          provider: confluent
+          resource: environment
+          token: ${{ secrets.TF_API_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+          workspace-prefix: ${{ vars.TF_WORKSPACE_PREFIX }}
+      - name: Copy Avro schemas to schema-registry folder
+        run: cp ./code/src/main/avro/*.avsc ./infrastructure/confluent/schema-registry
+      - name: Set-up Schema Registry
+        uses: ./.github/actions/terraform
+        with:
+          provider: confluent
+          resource: schema-registry
+          token: ${{ secrets.TF_API_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+          workspace-prefix: ${{ vars.TF_WORKSPACE_PREFIX }}
+      - name: Set-up topics
+        uses: ./.github/actions/terraform
+        with:
+          provider: confluent
+          resource: topics
+          token: ${{ secrets.TF_API_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+          workspace-prefix: ${{ vars.TF_WORKSPACE_PREFIX }}

@@ -1,0 +1,21 @@
+{
+  "Modules" : [
+    {
+      "Key" : "",
+      "Source" : "",
+      "Dir" : "."
+    }, {
+      "Key" : "cluster",
+      "Source" : "./cluster",
+      "Dir" : "cluster"
+    }, {
+      "Key" : "schema-registry",
+      "Source" : "./schema-registry",
+      "Dir" : "schema-registry"
+    }, {
+      "Key" : "users",
+      "Source" : "./users",
+      "Dir" : "users"
+    }
+  ]
+}

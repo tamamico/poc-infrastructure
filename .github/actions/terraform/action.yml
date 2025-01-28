@@ -1,0 +1,54 @@
+name: Build infrastructure
+
+inputs:
+  provider:
+    required: true
+    description: Infrastructure provider
+  resource:
+    required: true
+    description: Resource type
+  token:
+    required: true
+    description: Terraform Cloud API Token
+  organization:
+    required: true
+    description: Terraform Cloud organization
+  workspace-prefix:
+    required: true
+    description: Terraform Cloud workspace prefix
+
+runs:
+  using: "composite"
+  steps:
+    - name: Upload Configuration
+      uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.1
+      id: plan-upload
+      with:
+        token: ${{ inputs.token }}
+        organization: ${{ inputs.organization }}
+        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
+        directory: ./infrastructure/${{ inputs.provider }}/${{ inputs.resource }}
+    - name: Create Apply Run
+      uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
+      id: apply-run
+      with:
+        token: ${{ inputs.token }}
+        organization: ${{ inputs.organization }}
+        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
+        configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
+    - name: Apply
+      uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
+      if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
+      id: apply
+      with:
+        token: ${{ inputs.token }}
+        organization: ${{ inputs.organization }}
+        run: ${{ steps.apply-run.outputs.run_id }}
+        comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+    - name: Get workspace output
+      uses: hashicorp/tfc-workflows-github/actions/workspace-output@v1.3.1
+      id: workspace-output
+      with:
+        token: ${{ inputs.token }}
+        organization: ${{ inputs.organization }}
+        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
