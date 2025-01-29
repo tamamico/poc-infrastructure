@@ -20,6 +20,9 @@ spec:
         - name: secrets
           secret:
             secretName: secrets
+        - name: settings
+          configMap:
+            name: settings
       containers:
         - name: poc-scs-native
           image: ghcr.io/tamamico/poc-scs-native:0.1.0-SNAPSHOT
@@ -47,3 +50,6 @@ spec:
             - name: secrets
               readOnly: true
               mountPath: /etc/secrets/poc
+            - name: settings
+              readOnly: true
+              mountPath: /etc/config/poc
