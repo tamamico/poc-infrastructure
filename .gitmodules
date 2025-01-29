@@ -1,0 +1,3 @@
+[submodule "poc-spring-cloud-stream-native"]
+	path = poc-spring-cloud-stream-native
+	url = https://github.com/tamamico/poc-spring-cloud-stream-native.git
