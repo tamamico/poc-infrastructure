@@ -3,6 +3,13 @@ provider "kubernetes" {
   config_context = "docker-desktop"
 }
 
+variable "newrelic-api-key" {
+  type        = string
+  nullable    = false
+  sensitive   = true
+  description = "New Relic API key"
+}
+
 data "terraform_remote_state" "environment" {
   backend = "remote"
 
@@ -52,7 +59,8 @@ resource "kubernetes_secret" "secrets" {
   }
 
   data = {
-    "kafka.password"           = data.terraform_remote_state.environment.outputs.poc-password
-    "schema-registry.password" = data.terraform_remote_state.schema-registry.outputs.poc-password
+    "kafka.password"                                 = data.terraform_remote_state.environment.outputs.poc-password
+    "schema-registry.password"                       = data.terraform_remote_state.schema-registry.outputs.poc-password
+    "management.otlp.metrics.export.headers.api-key" = var.newrelic-api-key
   }
 }
