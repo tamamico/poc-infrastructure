@@ -33,7 +33,7 @@ spec:
               cpu: "500m"
               ephemeral-storage: "512M"
             limits:
-              memory: "2G"
+              memory: "4G"
               cpu: "1"
               ephemeral-storage: "1G"
           livenessProbe:
