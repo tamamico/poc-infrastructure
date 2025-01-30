@@ -59,8 +59,8 @@ resource "kubernetes_secret" "secrets" {
   }
 
   data = {
-    "kafka.password"                                 = data.terraform_remote_state.environment.outputs.poc-password
-    "schema-registry.password"                       = data.terraform_remote_state.schema-registry.outputs.poc-password
-    "management.otlp.metrics.export.headers.api-key" = var.newrelic-api-key
+    "kafka.password"           = data.terraform_remote_state.environment.outputs.poc-password
+    "schema-registry.password" = data.terraform_remote_state.schema-registry.outputs.poc-password
+    "newrelic.api-key"         = var.newrelic-api-key
   }
 }
