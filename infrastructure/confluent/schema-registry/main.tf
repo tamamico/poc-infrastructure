@@ -39,7 +39,7 @@ resource "confluent_api_key" "env-admin" {
   }
 }
 
-/*resource "confluent_schema" "input" {
+resource "confluent_schema" "input" {
   schema_registry_cluster {
     id = data.confluent_schema_registry_cluster.schema-registry.id
   }
@@ -64,7 +64,7 @@ resource "confluent_subject_config" "input" {
     key    = confluent_api_key.env-admin.id
     secret = confluent_api_key.env-admin.secret
   }
-}*/
+}
 
 resource "confluent_schema" "output" {
   schema_registry_cluster {
