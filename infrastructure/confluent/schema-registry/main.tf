@@ -66,7 +66,7 @@ resource "confluent_subject_config" "input" {
   }
 }
 
-resource "confluent_schema" "output" {
+/*resource "confluent_schema" "output" {
   schema_registry_cluster {
     id = data.confluent_schema_registry_cluster.schema-registry.id
   }
@@ -91,7 +91,7 @@ resource "confluent_subject_config" "output" {
     key    = confluent_api_key.env-admin.id
     secret = confluent_api_key.env-admin.secret
   }
-}
+}*/
 
 data "confluent_service_account" "poc-user" {
   display_name = "poc-service-account"
