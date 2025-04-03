@@ -1,12 +1,8 @@
 version: 2
 updates:
-  - package-ecosystem: "maven"
-    directory: "/code"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "terraform"
     directories:
-      - "/infrastructure/**/*"
+      - "/infrastructure"
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
