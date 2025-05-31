@@ -52,6 +52,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webflux-service
+  namespace: poc
 spec:
   selector:
     app: poc-webflux-native
