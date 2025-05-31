@@ -16,6 +16,10 @@ spec:
         app: poc-webflux-native
     spec:
       serviceAccountName: poc-user
+      volumes:
+        - name: secrets
+          secret:
+            secretName: secrets
       containers:
         - name: poc-webflux-native
           image: ghcr.io/tamamico/poc-webflux-native:0.0.1-snapshot
@@ -39,3 +43,7 @@ spec:
               port: 8080
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - name: secrets
+              readOnly: true
+              mountPath: /etc/secrets/poc
