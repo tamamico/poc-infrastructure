@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-webflux-native
+  namespace: poc
+  labels:
+    app: poc-webflux-native
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poc-webflux-native
+  template:
+    metadata:
+      labels:
+        app: poc-webflux-native
+    spec:
+      serviceAccountName: poc-user
+      containers:
+        - name: poc-webflux-native
+          image: ghcr.io/tamamico/poc-webflux-native:0.0.1-snapshot
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "1G"
+              cpu: "500m"
+              ephemeral-storage: "512M"
+            limits:
+              memory: "4G"
+              cpu: "1"
+              ephemeral-storage: "1G"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+          ports:
+            - containerPort: 8080
