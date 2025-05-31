@@ -47,3 +47,35 @@ spec:
             - name: secrets
               readOnly: true
               mountPath: /etc/secrets/poc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webflux-service
+spec:
+  selector:
+    app: poc-webflux-native
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webflux-ingress
+  namespace: poc
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: kubernetes.docker.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webflux-service
+                port:
+                  number: 8080
