@@ -22,7 +22,7 @@ spec:
             secretName: secrets
       containers:
         - name: poc-webflux-native
-          image: ghcr.io/tamamico/poc-webflux-native:0.0.1-snapshot
+          image: ghcr.io/tamamico/poc-webflux-native:0.0.1-SNAPSHOT
           imagePullPolicy: IfNotPresent
           resources:
             requests:
