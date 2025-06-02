@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: poc-webflux-native
+  name: webflux
   namespace: poc
   labels:
-    app: poc-webflux-native
+    app: webflux
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: poc-webflux-native
+      app: webflux
   template:
     metadata:
       labels:
-        app: poc-webflux-native
+        app: webflux
     spec:
       serviceAccountName: poc-user
       volumes:
@@ -21,7 +21,7 @@ spec:
           secret:
             secretName: secrets
       containers:
-        - name: poc-webflux-native
+        - name: webflux
           image: ghcr.io/tamamico/poc-webflux-native:0.0.1-SNAPSHOT
           imagePullPolicy: IfNotPresent
           resources:
@@ -55,7 +55,7 @@ metadata:
   namespace: poc
 spec:
   selector:
-    app: poc-webflux-native
+    app: webflux
   ports:
     - protocol: TCP
       port: 80
