@@ -20,18 +20,6 @@ spec:
         - name: secrets
           secret:
             secretName: secrets
-      initContainers:
-        - name: build-opentelemetry-headers
-          image: busybox
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "OTEL_EXPORTER_OTLP_HEADERS=api-key=$(cat /secrets/newrelic.api-key)" > /etc/secrets/poc
-          volumeMounts:
-            - name: secrets
-              mountPath: /secrets
-              readOnly: true
       containers:
         - name: webflux
           image: ghcr.io/tamamico/poc-webflux-native:0.0.1-SNAPSHOT
