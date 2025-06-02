@@ -23,6 +23,18 @@ spec:
         - name: settings
           configMap:
             name: settings
+      initContainers:
+        - name: generate-opentelemetry-headers
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "OTEL_EXPORTER_OTLP_HEADERS=api-key=$(cat /secrets/newrelic.api-key)" > /etc/secrets/poc
+          volumeMounts:
+            - name: newrelic-secret
+              mountPath: /secrets
+              readOnly: true
       containers:
         - name: poc-scs-native
           image: ghcr.io/tamamico/poc-scs-native:0.1.0-SNAPSHOT
