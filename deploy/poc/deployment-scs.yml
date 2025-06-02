@@ -32,7 +32,7 @@ spec:
             - |
               echo "OTEL_EXPORTER_OTLP_HEADERS=api-key=$(cat /secrets/newrelic.api-key)" > /etc/secrets/poc
           volumeMounts:
-            - name: newrelic-secret
+            - name: secrets
               mountPath: /secrets
               readOnly: true
       containers:
