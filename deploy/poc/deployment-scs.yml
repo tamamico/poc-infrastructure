@@ -24,7 +24,7 @@ spec:
           configMap:
             name: settings
       initContainers:
-        - name: generate-opentelemetry-headers
+        - name: build-opentelemetry-headers
           image: busybox
           command:
             - /bin/sh
