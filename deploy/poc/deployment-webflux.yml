@@ -47,18 +47,6 @@ spec:
             - name: secrets
               readOnly: true
               mountPath: /etc/secrets/poc
-          env:
-            - name: OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED
-              value: 'true'
-            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
-              value: 'true'
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: https://otlp.eu01.nr-data.net:4317
-            - name: OTEL_EXPORTER_OTLP_HEADERS
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: newrelic.api-key
 ---
 apiVersion: v1
 kind: Service
