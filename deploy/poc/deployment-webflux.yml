@@ -55,8 +55,8 @@ spec:
             - name: OTEL_EXPORTER_OTLP_HEADERS
               valueFrom:
                 secretKeyRef:
-                  key: secrets
-                  name: newrelic.api-key
+                  name: secrets
+                  key: newrelic.api-key
 ---
 apiVersion: v1
 kind: Service
