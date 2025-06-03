@@ -48,8 +48,6 @@ spec:
               readOnly: true
               mountPath: /etc/secrets/poc
           env:
-            - name: OTEL_JAVAAGENT_ENABLED
-              value: 'true'
             - name: OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED
               value: 'true'
             - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
