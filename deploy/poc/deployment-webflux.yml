@@ -50,8 +50,6 @@ spec:
           env:
             - name: OTEL_JAVAAGENT_ENABLED
               value: 'true'
-            - name: OTEL_METRICS_EXPORTER
-              value: 'true'
             - name: OTEL_INSTRUMENTATION_MICROMETER_ENABLED
               value: 'true'
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
