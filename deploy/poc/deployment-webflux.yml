@@ -52,6 +52,8 @@ spec:
               value: 'true'
             - name: OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED
               value: 'true'
+            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
+              value: 'true'
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: https://otlp.eu01.nr-data.net:4318
             - name: OTEL_EXPORTER_OTLP_HEADERS
