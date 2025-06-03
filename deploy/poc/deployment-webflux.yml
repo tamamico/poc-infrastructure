@@ -50,7 +50,7 @@ spec:
           env:
             - name: OTEL_JAVAAGENT_ENABLED
               value: 'true'
-            - name: OTEL_INSTRUMENTATION_MICROMETER_ENABLED
+            - name: OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED
               value: 'true'
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: https://otlp.eu01.nr-data.net:4318
