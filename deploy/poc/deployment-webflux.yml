@@ -16,10 +16,6 @@ spec:
         app: webflux
     spec:
       serviceAccountName: poc-user
-      volumes:
-        - name: secrets
-          secret:
-            secretName: secrets
       containers:
         - name: webflux
           image: ghcr.io/tamamico/poc-webflux-native:0.0.1-SNAPSHOT
@@ -43,22 +39,6 @@ spec:
               port: 8080
           ports:
             - containerPort: 8080
-          volumeMounts:
-            - name: secrets
-              readOnly: true
-              mountPath: /etc/secrets/poc
-          env:
-            - name: OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED
-              value: 'true'
-            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
-              value: 'true'
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: https://otlp.eu01.nr-data.net:4318
-            - name: OTEL_EXPORTER_OTLP_HEADERS
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: newrelic.api-key
 ---
 apiVersion: v1
 kind: Service
