@@ -44,7 +44,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: new-relic
-                key: api.key
+                key: api-key
 ---
 apiVersion: v1
 kind: Service
