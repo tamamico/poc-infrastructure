@@ -19,7 +19,7 @@ spec:
       containers:
         - name: webflux
           image: ghcr.io/tamamico/poc-webflux-native:0.0.1-SNAPSHOT
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: "1G"
