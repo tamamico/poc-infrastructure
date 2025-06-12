@@ -31,9 +31,9 @@ data "kubernetes_namespace" "poc" {
   }
 }
 
-resource "kubernetes_config_map" "settings" {
+resource "kubernetes_config_map" "kafka" {
   metadata {
-    name      = "settings"
+    name      = "kafka"
     namespace = data.kubernetes_namespace.poc.id
   }
 
@@ -45,14 +45,25 @@ resource "kubernetes_config_map" "settings" {
   }
 }
 
-resource "kubernetes_secret" "secrets" {
+resource "kubernetes_secret" "kafka" {
   metadata {
-    name      = "secrets"
-    namespace = "poc"
+    name      = "kafka"
+    namespace = data.kubernetes_namespace.poc.id
   }
 
   data = {
     "kafka.password"           = data.terraform_remote_state.environment.outputs.poc-password
     "schema-registry.password" = data.terraform_remote_state.schema-registry.outputs.poc-password
+  }
+}
+
+resource "kubernetes_secret" "new-relic" {
+  metadata {
+    name      = "new-relic"
+    namespace = data.kubernetes_namespace.poc.id
+  }
+
+  data = {
+    "api-key" = data.terraform_remote_state.environment.outputs.poc-password
   }
 }
