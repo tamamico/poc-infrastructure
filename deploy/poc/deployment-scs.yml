@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: poc-scs-native
+  name: scs-reactive-kafka
   namespace: poc
   labels:
-    app: poc-scs-native
+    app: scs-reactive-kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: poc-scs-native
+      app: scs-reactive-kafka
   template:
     metadata:
       labels:
-        app: poc-scs-native
+        app: scs-reactive-kafka
     spec:
       serviceAccountName: poc-user
       volumes:
@@ -24,7 +24,7 @@ spec:
           configMap:
             name: settings
       containers:
-        - name: poc-scs-native
+        - name: scs-reactive-kafka
           image: ghcr.io/tamamico/poc-scs-native:0.1.0-SNAPSHOT
           imagePullPolicy: IfNotPresent
           resources:
@@ -53,3 +53,9 @@ spec:
             - name: settings
               readOnly: true
               mountPath: /etc/config/poc
+          env:
+            - name: OTEL_EXPORTER_OTLP_HEADERS_API-KEY
+              valueFrom:
+                secretKeyRef:
+                  name: new-relic
+                  key: api-key
