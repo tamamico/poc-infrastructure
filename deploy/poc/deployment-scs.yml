@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scs-reactive-kafka
+  name: scs-kafka-reactive
   namespace: poc
   labels:
-    app: scs-reactive-kafka
+    app: scs-kafka-reactive
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scs-reactive-kafka
+      app: scs-kafka-reactive
   template:
     metadata:
       labels:
-        app: scs-reactive-kafka
+        app: scs-kafka-reactive
     spec:
       serviceAccountName: poc-user
       volumes:
@@ -24,7 +24,7 @@ spec:
           configMap:
             name: settings
       containers:
-        - name: scs-reactive-kafka
+        - name: scs-kafka-reactive
           image: ghcr.io/tamamico/poc-scs-native:0.1.0-SNAPSHOT
           imagePullPolicy: IfNotPresent
           resources:

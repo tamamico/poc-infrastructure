@@ -40,11 +40,11 @@ spec:
           ports:
             - containerPort: 8080
           env:
-          - name: OTEL_EXPORTER_OTLP_HEADERS_API-KEY
-            valueFrom:
-              secretKeyRef:
-                name: new-relic
-                key: api-key
+            - name: OTEL_EXPORTER_OTLP_HEADERS_API-KEY
+              valueFrom:
+                secretKeyRef:
+                  name: new-relic
+                  key: api-key
 ---
 apiVersion: v1
 kind: Service
