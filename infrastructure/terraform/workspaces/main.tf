@@ -30,8 +30,16 @@ resource "tfe_workspace" "confluent-environment" {
   }
 }
 
+data "confluent_organization" "confluent" {}
+
 data "confluent_service_account" "automator" {
   id = "sa-1223xpv"
+}
+
+resource "confluent_role_binding" "staging-admin" {
+  principal   = "User:${data.confluent_service_account.automator.id}"
+  role_name   = "AccountAdmin"
+  crn_pattern = data.confluent_organization.confluent.resource_name
 }
 
 resource "confluent_api_key" "automator" {
