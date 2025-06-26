@@ -13,9 +13,6 @@ inputs:
   organization:
     required: true
     description: Terraform Cloud organization
-  workspace-prefix:
-    required: true
-    description: Terraform Cloud workspace prefix
 
 runs:
   using: "composite"
@@ -26,7 +23,7 @@ runs:
       with:
         token: ${{ inputs.token }}
         organization: ${{ inputs.organization }}
-        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
+        workspace: ${{ inputs.workspace }}
         directory: ./infrastructure/${{ inputs.provider }}/${{ inputs.resource }}
     - name: Create Apply Run
       uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
@@ -34,7 +31,7 @@ runs:
       with:
         token: ${{ inputs.token }}
         organization: ${{ inputs.organization }}
-        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
+        workspace: ${{ inputs.provider }}-${{ inputs.resource }}
         configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
     - name: Apply
       uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
@@ -51,4 +48,4 @@ runs:
       with:
         token: ${{ inputs.token }}
         organization: ${{ inputs.organization }}
-        workspace: ${{ inputs.workspace-prefix }}-${{ inputs.resource }}
+        workspace: ${{ inputs.provider }}-${{ inputs.resource }}
