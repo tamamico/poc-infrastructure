@@ -23,7 +23,7 @@ runs:
       with:
         token: ${{ inputs.token }}
         organization: ${{ inputs.organization }}
-        workspace: ${{ inputs.workspace }}
+        workspace: ${{ inputs.provider }}-${{ inputs.resource }}
         directory: ./infrastructure/${{ inputs.provider }}/${{ inputs.resource }}
     - name: Create Apply Run
       uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
