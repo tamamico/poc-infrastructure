@@ -39,7 +39,7 @@ resource "confluent_service_account" "terraform" {
 
 resource "confluent_role_binding" "terraform" {
   principal   = "User:${confluent_service_account.terraform.id}"
-  role_name   = "AccountAdmin"
+  role_name   = "OrganizationAdmin"
   crn_pattern = data.confluent_organization.confluent.resource_name
 }
 
