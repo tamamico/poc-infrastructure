@@ -6,8 +6,8 @@ on:
       - main
     paths:
       - 'infrastructure/confluent/**'
-      #- '.github/workflows/main-infra-confluent.yml'
-      #- '.github/actions/terraform/action.yml'
+      - '.github/workflows/main-infra-confluent.yml'
+      - '.github/actions/terraform/action.yml'
   workflow_dispatch:
 
 jobs:
