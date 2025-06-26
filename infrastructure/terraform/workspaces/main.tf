@@ -32,24 +32,25 @@ resource "tfe_workspace" "confluent-environment" {
 
 data "confluent_organization" "confluent" {}
 
-data "confluent_service_account" "automator" {
-  id = "sa-1223xpv"
+resource "confluent_service_account" "terraform" {
+  display_name = "terraform"
+  description  = "Main Terraform Cloud service account"
 }
 
-resource "confluent_role_binding" "staging-admin" {
-  principal   = "User:${data.confluent_service_account.automator.id}"
+resource "confluent_role_binding" "terraform" {
+  principal   = "User:${confluent_service_account.terraform.id}"
   role_name   = "AccountAdmin"
   crn_pattern = data.confluent_organization.confluent.resource_name
 }
 
-resource "confluent_api_key" "automator" {
+resource "confluent_api_key" "terraform" {
   display_name = "Terraform - Environment"
-  description  = "API key for Automator service account to use in Terraform Cloud"
+  description  = "API key for Terraform service account and environment workspace"
 
   owner {
-    id          = data.confluent_service_account.automator.id
-    api_version = data.confluent_service_account.automator.api_version
-    kind        = data.confluent_service_account.automator.kind
+    id          = confluent_service_account.terraform.id
+    api_version = confluent_service_account.terraform.api_version
+    kind        = confluent_service_account.terraform.kind
   }
 
   lifecycle {
@@ -59,7 +60,7 @@ resource "confluent_api_key" "automator" {
 
 resource "tfe_variable" "confluent-api-key" {
   key          = "CONFLUENT_CLOUD_API_KEY"
-  value        = confluent_api_key.automator.id
+  value        = confluent_api_key.terraform.id
   category     = "env"
   description  = "Confluent Cloud API key"
   workspace_id = tfe_workspace.confluent-environment.id
@@ -67,7 +68,7 @@ resource "tfe_variable" "confluent-api-key" {
 
 resource "tfe_variable" "confluent-api-secret" {
   key          = "CONFLUENT_CLOUD_API_SECRET"
-  value        = confluent_api_key.automator.secret
+  value        = confluent_api_key.terraform.secret
   category     = "env"
   sensitive    = true
   description  = "Confluent Cloud API secret"
