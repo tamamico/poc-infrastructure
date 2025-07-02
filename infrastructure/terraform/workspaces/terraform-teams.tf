@@ -44,7 +44,7 @@ resource "tfe_variable" "staging-admin-api-secret" {
   workspace_id = tfe_workspace.terraform-teams.id
 }
 
-variable "github_teams_token" {
+variable "gh_teams_token" {
   type        = string
   sensitive   = true
   description = "GitHub PAT to set-up in Teams workspace"
@@ -52,7 +52,7 @@ variable "github_teams_token" {
 
 resource "tfe_variable" "github-token" {
   key          = "GITHUB_TOKEN"
-  value        = var.github_teams_token
+  value        = var.gh_teams_token
   category     = "env"
   sensitive    = true
   description  = "GitHub token"

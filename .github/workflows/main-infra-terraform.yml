@@ -52,4 +52,4 @@ jobs:
           organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TEAMS_TOKEN }}
-          TF_VAR_github_teams_token: ${{ secrets.GH_TEAMS_TOKEN }}
+          TF_VAR_gh_teams_token: ${{ secrets.GH_TEAMS_TOKEN }}
