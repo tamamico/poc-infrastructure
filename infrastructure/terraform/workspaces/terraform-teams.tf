@@ -14,7 +14,7 @@ data "confluent_service_account" "staging-admin" {
 
 resource "confluent_api_key" "staging-admin" {
   display_name = "Terraform - Teams"
-  description  = "API key for Staging admin service account and teams workspace"
+  description  = "API key for Staging admin service account in teams workspace"
 
   owner {
     id          = data.confluent_service_account.staging-admin.id
