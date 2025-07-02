@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    tfe = {
-      source  = "hashicorp/tfe"
-      version = "0.67.0"
-    }
-    confluent = {
-      source  = "confluentinc/confluent"
-      version = "2.23.0"
-    }
-  }
-}
-
 data "tfe_organization" "sagittec" {
   name = "sagittec"
 }
@@ -58,7 +45,7 @@ resource "confluent_api_key" "terraform" {
   }
 }
 
-resource "tfe_variable" "confluent-api-key" {
+resource "tfe_variable" "terraform-api-key" {
   key          = "CONFLUENT_CLOUD_API_KEY"
   value        = confluent_api_key.terraform.id
   category     = "env"
@@ -66,7 +53,7 @@ resource "tfe_variable" "confluent-api-key" {
   workspace_id = tfe_workspace.confluent-environment.id
 }
 
-resource "tfe_variable" "confluent-api-secret" {
+resource "tfe_variable" "terraform-api-secret" {
   key          = "CONFLUENT_CLOUD_API_SECRET"
   value        = confluent_api_key.terraform.secret
   category     = "env"
