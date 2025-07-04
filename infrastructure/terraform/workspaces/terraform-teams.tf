@@ -63,7 +63,24 @@ resource "tfe_variable" "staging-broker-rest-endpoint" {
   workspace_id = tfe_workspace.terraform-teams.id
 }
 
-resource "tfe_variable" "staging-admin-api-key" {
+resource "tfe_variable" "confluent-cloud-api-key" {
+  key          = "CONFLUENT_CLOUD_API_KEY"
+  value        = confluent_api_key.staging-admin.id
+  category     = "env"
+  description  = "Confluent Cloud API key"
+  workspace_id = tfe_workspace.terraform-teams.id
+}
+
+resource "tfe_variable" "confluent-cloud-api-secret" {
+  key          = "CONFLUENT_CLOUD_API_SECRET"
+  value        = confluent_api_key.staging-admin.secret
+  category     = "env"
+  sensitive    = true
+  description  = "Confluent Cloud API secret"
+  workspace_id = tfe_workspace.terraform-teams.id
+}
+
+resource "tfe_variable" "kafka-api-key" {
   key          = "KAFKA_API_KEY"
   value        = confluent_api_key.staging-admin.id
   category     = "env"
@@ -71,7 +88,7 @@ resource "tfe_variable" "staging-admin-api-key" {
   workspace_id = tfe_workspace.terraform-teams.id
 }
 
-resource "tfe_variable" "staging-admin-api-secret" {
+resource "tfe_variable" "kafka-api-secret" {
   key          = "KAFKA_API_SECRET"
   value        = confluent_api_key.staging-admin.secret
   category     = "env"
