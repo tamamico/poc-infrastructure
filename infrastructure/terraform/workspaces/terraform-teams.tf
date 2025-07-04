@@ -58,3 +58,22 @@ resource "tfe_variable" "github-token" {
   description  = "GitHub token"
   workspace_id = tfe_workspace.terraform-teams.id
 }
+
+data "tfe_team" "team" {
+  name         = "owners"
+  organization = data.tfe_organization.sagittec.name
+}
+
+resource "tfe_team_token" "github-actions" {
+  team_id     = data.tfe_team.team.id
+  description = "GitHub Actions token for teams workspace"
+}
+
+resource "tfe_variable" "terraform-token" {
+  key          = "TFE_TOKEN"
+  value        = tfe_team_token.github-actions.token
+  category     = "env"
+  sensitive    = true
+  description  = "Terraform Cloud token"
+  workspace_id = tfe_workspace.terraform-teams.id
+}
