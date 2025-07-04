@@ -60,27 +60,21 @@ resource "github_actions_variable" "terraform-workspace" {
   value         = tfe_workspace.workspace.name
 }
 
-variable "staging_id" {
-  type        = string
-  nullable    = false
-  description = "Staging environment ID"
-}
-
 data "confluent_kafka_cluster" "staging" {
   display_name = "poc_kafka_cluster"
 
   environment {
-    id = var.staging_id
+    id = var.environment-id
   }
 }
 
 resource "confluent_service_account" "team-admin" {
-  display_name = "${var.name}-staging"
-  description  = "Service Account for team ${var.name} in staging"
+  display_name = "${var.name}-${var.environment-id}"
+  description  = "Service Account for team ${var.name} in ${var.environment-id}"
 }
 
 resource "confluent_api_key" "team-admin" {
-  display_name = "${var.name}-staging"
+  display_name = "${var.name}-${var.environment-id}"
   description  = "API Key for ${confluent_service_account.team-admin.display_name} service account"
 
   owner {
