@@ -24,12 +24,6 @@ data "confluent_service_account" "staging-admin" {
   display_name = "staging-admin"
 }
 
-resource "confluent_role_binding" "staging-admin" {
-  principal   = "User:${data.confluent_service_account.staging-admin.id}"
-  role_name   = "AccountAdmin"
-  crn_pattern = data.confluent_kafka_cluster.staging.rbac_crn
-}
-
 resource "confluent_api_key" "staging-admin" {
   display_name = data.confluent_service_account.staging-admin.display_name
   description  = "API key for Staging admin service account in teams workspace"
