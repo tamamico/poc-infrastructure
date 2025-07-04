@@ -59,3 +59,12 @@ resource "github_actions_variable" "terraform-workspace" {
   variable_name = "TF_WORKSPACE"
   value         = tfe_workspace.workspace.name
 }
+
+data "confluent_environment" "staging" {
+  display_name = "staging"
+}
+
+resource "confluent_service_account" "team" {
+  display_name = "${var.name}-${data.confluent_environment.staging.display_name}"
+  description  = "Service Account for team ${var.name}"
+}

@@ -6,5 +6,6 @@ variable "name" {
 
 variable "repository" {
   type        = string
+  nullable    = false
   description = "GitHub repository to set-up API key secrets"
 }
