@@ -15,9 +15,13 @@ terraform {
   }
 }
 
+data "tfe_organization" "sagittec" {
+  name = "sagittec"
+}
+
 data "tfe_team" "team" {
   name         = "owners"
-  organization = "sagittec"
+  organization = data.tfe_organization.sagittec.name
 }
 
 resource "tfe_team_token" "github-actions" {
