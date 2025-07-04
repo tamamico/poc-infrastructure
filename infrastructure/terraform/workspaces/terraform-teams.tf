@@ -39,14 +39,6 @@ resource "confluent_api_key" "staging-admin" {
   }
 }
 
-resource "tfe_variable" "staging-id" {
-  key          = "TF_VAR_staging_id"
-  value        = data.confluent_environment.staging.id
-  category     = "env"
-  description  = "Staging environment ID"
-  workspace_id = tfe_workspace.terraform-teams.id
-}
-
 resource "tfe_variable" "staging-broker-id" {
   key          = "KAFKA_ID"
   value        = data.confluent_kafka_cluster.staging.id
