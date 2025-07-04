@@ -22,7 +22,7 @@ data "tfe_team" "team" {
 
 resource "tfe_team_token" "github-actions" {
   team_id     = data.tfe_team.team.id
-  description = "GitHub Actions token for team " + var.name
+  description = "GitHub Actions token for team ${var.name}"
 }
 
 data "github_repository" "team" {
