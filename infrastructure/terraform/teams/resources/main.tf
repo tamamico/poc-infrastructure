@@ -64,7 +64,69 @@ data "confluent_environment" "staging" {
   display_name = "staging"
 }
 
-resource "confluent_service_account" "team" {
+data "confluent_kafka_cluster" "staging" {
+  display_name = "poc_kafka_cluster"
+
+  environment {
+    id = data.confluent_environment.staging.id
+  }
+}
+
+resource "confluent_service_account" "team-admin" {
   display_name = "${var.name}-${data.confluent_environment.staging.display_name}"
-  description  = "Service Account for team ${var.name}"
+  description  = "Service Account for team ${var.name} in ${data.confluent_environment.staging.display_name}"
+}
+
+resource "confluent_api_key" "team-admin" {
+  display_name = "${var.name}-${data.confluent_environment.staging.display_name}"
+  description  = "API Key for ${confluent_service_account.team-admin.display_name} service account"
+
+  owner {
+    id          = confluent_service_account.team-admin.id
+    api_version = confluent_service_account.team-admin.api_version
+    kind        = confluent_service_account.team-admin.kind
+  }
+}
+
+resource "confluent_kafka_acl" "create-topics" {
+  resource_type = "TOPIC"
+  resource_name = "es.ecristobal.${var.name}"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.team-admin.id}"
+  host          = "*"
+  operation     = "CREATE"
+  permission    = "ALLOW"
+}
+
+resource "tfe_variable" "staging-broker-id" {
+  key          = "KAFKA_ID"
+  value        = data.confluent_kafka_cluster.staging.id
+  category     = "env"
+  description  = "Staging Kafka broker ID"
+  workspace_id = tfe_workspace.workspace.id
+}
+
+resource "tfe_variable" "staging-broker-rest-endpoint" {
+  key          = "KAFKA_REST_ENDPOINT"
+  value        = data.confluent_kafka_cluster.staging.rest_endpoint
+  category     = "env"
+  description  = "Staging Kafka broker REST endpoint"
+  workspace_id = tfe_workspace.workspace.id
+}
+
+resource "tfe_variable" "staging-admin-api-key" {
+  key          = "KAFKA_API_KEY"
+  value        = confluent_api_key.team-admin.id
+  category     = "env"
+  description  = "${var.name} admin API key"
+  workspace_id = tfe_workspace.workspace.id
+}
+
+resource "tfe_variable" "staging-admin-api-secret" {
+  key          = "KAFKA_API_SECRET"
+  value        = confluent_api_key.team-admin.secret
+  category     = "env"
+  sensitive    = true
+  description  = "${var.name} admin API secret"
+  workspace_id = tfe_workspace.workspace.id
 }
