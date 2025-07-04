@@ -50,3 +50,10 @@ jobs:
           resource: workspaces
           token: ${{ secrets.TFE_TOKEN }}
           organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+      - name: Set-up "teams" workspace
+        uses: ./.github/actions/terraform
+        with:
+          provider: terraform
+          resource: teams
+          token: ${{ secrets.TFE_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
