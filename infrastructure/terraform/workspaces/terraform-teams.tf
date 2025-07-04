@@ -26,7 +26,7 @@ data "confluent_service_account" "staging-admin" {
 
 resource "confluent_role_binding" "staging-admin" {
   principal   = "User:${data.confluent_service_account.staging-admin.id}"
-  role_name   = "UserAdmin"
+  role_name   = "AccountAdmin"
   crn_pattern = data.confluent_kafka_cluster.staging.rbac_crn
 }
 
