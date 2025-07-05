@@ -98,6 +98,18 @@ resource "confluent_api_key" "team-admin" {
   }
 }
 
+variable "staging_admin_key" {
+  type        = string
+  nullable    = false
+  description = "Staging admin key"
+}
+
+variable "staging_admin_secret" {
+  type        = string
+  nullable    = false
+  description = "Staging admin secret"
+}
+
 resource "confluent_kafka_acl" "create-topics" {
   resource_type = "TOPIC"
   resource_name = "es.ecristobal.${var.name}"
@@ -106,6 +118,16 @@ resource "confluent_kafka_acl" "create-topics" {
   host          = "*"
   operation     = "CREATE"
   permission    = "ALLOW"
+  rest_endpoint = data.confluent_kafka_cluster.staging.rest_endpoint
+
+  kafka_cluster {
+    id = data.confluent_kafka_cluster.staging.id
+  }
+
+  credentials {
+    key    = var.staging_admin_key
+    secret = var.staging_admin_secret
+  }
 }
 
 resource "tfe_variable" "staging-broker-id" {
