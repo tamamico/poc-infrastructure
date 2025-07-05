@@ -107,6 +107,10 @@ resource "confluent_kafka_acl" "create-topics" {
   operation     = "CREATE"
   permission    = "ALLOW"
   rest_endpoint = data.confluent_kafka_cluster.staging.rest_endpoint
+
+  kafka_cluster {
+    id = data.confluent_kafka_cluster.staging.id
+  }
 }
 
 resource "tfe_variable" "staging-broker-id" {
