@@ -52,6 +52,12 @@ resource "confluent_role_binding" "staging-admin-cluster" {
   crn_pattern = confluent_environment.staging.resource_name
 }
 
+resource "confluent_role_binding" "staging-admin-cluster" {
+  principal   = "User:${confluent_service_account.staging-admin.id}"
+  role_name   = "CloudClusterAdmin"
+  crn_pattern = confluent_kafka_cluster.poc.rbac_crn
+}
+
 data "confluent_organization" "sagittec" {}
 
 resource "confluent_role_binding" "staging-admin-account" {
