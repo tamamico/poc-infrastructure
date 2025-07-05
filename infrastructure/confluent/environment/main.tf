@@ -45,16 +45,6 @@ resource "confluent_api_key" "staging-admin" {
     kind        = confluent_service_account.staging-admin.kind
   }
 
-  managed_resource {
-    id          = confluent_kafka_cluster.poc.id
-    api_version = confluent_kafka_cluster.poc.api_version
-    kind        = confluent_kafka_cluster.poc.kind
-
-    environment {
-      id = confluent_environment.staging.id
-    }
-  }
-
   lifecycle {
     prevent_destroy = true
   }
