@@ -81,23 +81,6 @@ data "tfe_workspace" "teams" {
   organization = data.tfe_organization.sagittec.name
 }
 
-resource "tfe_variable" "confluent-api-key" {
-  key          = "CONFLUENT_CLOUD_API_KEY"
-  value        = confluent_api_key.staging-admin.id
-  category     = "env"
-  description  = "Confluent Cloud API key"
-  workspace_id = data.tfe_workspace.teams.id
-}
-
-resource "tfe_variable" "confluent-api-secret" {
-  key          = "CONFLUENT_CLOUD_API_SECRET"
-  value        = confluent_api_key.staging-admin.secret
-  category     = "env"
-  sensitive    = true
-  description  = "Confluent Cloud API secret"
-  workspace_id = data.tfe_workspace.teams.id
-}
-
 resource "tfe_variable" "kafka-api-key" {
   key          = "TF_VAR_staging_admin_key"
   value        = confluent_api_key.staging-admin.id
