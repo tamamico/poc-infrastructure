@@ -15,11 +15,6 @@ terraform {
   }
 }
 
-provider "confluent" {
-  cloud_api_key    = var.staging_admin_key
-  cloud_api_secret = var.staging_admin_secret
-}
-
 data "tfe_organization" "sagittec" {
   name = "sagittec"
 }
