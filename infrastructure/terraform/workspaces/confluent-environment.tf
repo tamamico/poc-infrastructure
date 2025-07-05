@@ -32,10 +32,6 @@ resource "confluent_api_key" "terraform" {
     api_version = confluent_service_account.terraform.api_version
     kind        = confluent_service_account.terraform.kind
   }
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "tfe_variable" "terraform-api-key" {
