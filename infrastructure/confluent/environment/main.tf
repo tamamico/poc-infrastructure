@@ -46,7 +46,7 @@ resource "confluent_api_key" "staging-admin" {
   }
 }
 
-resource "confluent_role_binding" "staging-admin-cluster" {
+resource "confluent_role_binding" "staging-admin-environment" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
   role_name   = "EnvironmentAdmin"
   crn_pattern = confluent_environment.staging.resource_name
