@@ -91,3 +91,20 @@ resource "tfe_variable" "terraform-api-secret" {
   description  = "Confluent Cloud API secret"
   workspace_id = data.tfe_workspace.teams.id
 }
+
+resource "tfe_variable" "terraform-api-key" {
+  key          = "KAFKA_API_KEY"
+  value        = confluent_api_key.staging-admin.id
+  category     = "env"
+  description  = "Kafka API key"
+  workspace_id = data.tfe_workspace.teams.id
+}
+
+resource "tfe_variable" "terraform-api-secret" {
+  key          = "KAFKA_API_SECRET"
+  value        = confluent_api_key.staging-admin.secret
+  category     = "env"
+  sensitive    = true
+  description  = "KAFKA API secret"
+  workspace_id = data.tfe_workspace.teams.id
+}
