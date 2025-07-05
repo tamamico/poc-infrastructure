@@ -4,6 +4,10 @@ terraform {
       source  = "confluentinc/confluent"
       version = "2.23.0"
     }
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "0.67.0"
+    }
   }
 }
 
@@ -31,12 +35,6 @@ resource "confluent_service_account" "staging-admin" {
   description  = "Staging admin service account"
 }
 
-resource "confluent_role_binding" "staging-admin-key" {
-  principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "ResourceKeyAdmin"
-  crn_pattern = confluent_kafka_cluster.poc.rbac_crn
-}
-
 resource "confluent_role_binding" "staging-admin-cluster" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
   role_name   = "CloudClusterAdmin"
@@ -49,4 +47,35 @@ resource "confluent_role_binding" "staging-admin-account" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
   role_name   = "AccountAdmin"
   crn_pattern = data.confluent_organization.sagittec.resource_name
+}
+
+resource "confluent_role_binding" "staging-admin-key" {
+  principal   = "User:${confluent_service_account.staging-admin.id}"
+  role_name   = "ResourceKeyAdmin"
+  crn_pattern = data.confluent_organization.sagittec.resource_name
+}
+
+data "tfe_organization" "sagittec" {
+  name = "sagittec"
+}
+
+data "tfe_workspace" "terraform-teams" {
+  name         = "terraform-teams"
+  organization = data.tfe_organization.sagittec.name
+}
+
+resource "tfe_variable" "staging-broker-id" {
+  key          = "KAFKA_ID"
+  value        = confluent_kafka_cluster.poc.id
+  category     = "env"
+  description  = "Staging Kafka broker ID"
+  workspace_id = data.tfe_workspace.terraform-teams.id
+}
+
+resource "tfe_variable" "staging-broker-rest-endpoint" {
+  key          = "KAFKA_REST_ENDPOINT"
+  value        = confluent_kafka_cluster.poc.rest_endpoint
+  category     = "env"
+  description  = "Staging Kafka broker REST endpoint"
+  workspace_id = data.tfe_workspace.terraform-teams.id
 }
