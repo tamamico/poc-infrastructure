@@ -33,12 +33,12 @@ resource "confluent_service_account" "staging-admin" {
 
 resource "confluent_role_binding" "staging-environment-admin" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "UserAdmin"
+  role_name   = "Operator"
   crn_pattern = confluent_environment.staging.resource_name
 }
 
 resource "confluent_role_binding" "staging-topic-admin" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "ResourceOwner"
-  crn_pattern = "crn://confluent.cloud/kafka=${confluent_kafka_cluster.poc.id}/topic:*"
+  role_name   = "CloudClusterAdmin"
+  crn_pattern = confluent_kafka_cluster.poc.rbac_crn
 }
