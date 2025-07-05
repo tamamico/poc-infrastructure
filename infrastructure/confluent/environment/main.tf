@@ -54,28 +54,3 @@ resource "confluent_role_binding" "staging-admin-key" {
   role_name   = "ResourceKeyAdmin"
   crn_pattern = data.confluent_organization.sagittec.resource_name
 }
-
-data "tfe_organization" "sagittec" {
-  name = "sagittec"
-}
-
-data "tfe_workspace" "terraform-teams" {
-  name         = "terraform-teams"
-  organization = data.tfe_organization.sagittec.name
-}
-
-resource "tfe_variable" "staging-broker-id" {
-  key          = "KAFKA_ID"
-  value        = confluent_kafka_cluster.poc.id
-  category     = "env"
-  description  = "Staging Kafka broker ID"
-  workspace_id = data.tfe_workspace.terraform-teams.id
-}
-
-resource "tfe_variable" "staging-broker-rest-endpoint" {
-  key          = "KAFKA_REST_ENDPOINT"
-  value        = confluent_kafka_cluster.poc.rest_endpoint
-  category     = "env"
-  description  = "Staging Kafka broker REST endpoint"
-  workspace_id = data.tfe_workspace.terraform-teams.id
-}
