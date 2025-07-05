@@ -98,18 +98,6 @@ resource "confluent_api_key" "team-admin" {
   }
 }
 
-variable "staging_admin_key" {
-  type        = string
-  nullable    = false
-  description = "Staging admin key"
-}
-
-variable "staging_admin_secret" {
-  type        = string
-  nullable    = false
-  description = "Staging admin secret"
-}
-
 resource "confluent_kafka_acl" "create-topics" {
   resource_type = "TOPIC"
   resource_name = "es.ecristobal.${var.name}"
