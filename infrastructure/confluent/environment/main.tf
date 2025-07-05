@@ -92,24 +92,8 @@ resource "tfe_variable" "confluent-api-secret" {
   workspace_id = data.tfe_workspace.teams.id
 }
 
-resource "tfe_variable" "kafka-id" {
-  key          = "KAFKA_ID"
-  value        = confluent_kafka_cluster.poc.id
-  category     = "env"
-  description  = "Kafka API key"
-  workspace_id = data.tfe_workspace.teams.id
-}
-
-resource "tfe_variable" "kafka-rest-endpoint" {
-  key          = "KAFKA_REST_ENDPOINT"
-  value        = confluent_kafka_cluster.poc.rest_endpoint
-  category     = "env"
-  description  = "Kafka API key"
-  workspace_id = data.tfe_workspace.teams.id
-}
-
 resource "tfe_variable" "kafka-api-key" {
-  key          = "KAFKA_API_KEY"
+  key          = "TF_VAR_staging-admin-key"
   value        = confluent_api_key.staging-admin.id
   category     = "env"
   description  = "Kafka API key"
@@ -117,7 +101,7 @@ resource "tfe_variable" "kafka-api-key" {
 }
 
 resource "tfe_variable" "kafka-api-secret" {
-  key          = "KAFKA_API_SECRET"
+  key          = "TF_VAR_staging-admin-secret"
   value        = confluent_api_key.staging-admin.secret
   category     = "env"
   sensitive    = true
