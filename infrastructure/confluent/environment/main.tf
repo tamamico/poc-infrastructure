@@ -93,7 +93,7 @@ resource "tfe_variable" "confluent-api-secret" {
 }
 
 resource "tfe_variable" "kafka-api-key" {
-  key          = "TF_VAR_staging-admin-key"
+  key          = "TF_VAR_staging_admin_key"
   value        = confluent_api_key.staging-admin.id
   category     = "env"
   description  = "Kafka API key"
@@ -101,7 +101,7 @@ resource "tfe_variable" "kafka-api-key" {
 }
 
 resource "tfe_variable" "kafka-api-secret" {
-  key          = "TF_VAR_staging-admin-secret"
+  key          = "TF_VAR_staging_admin_secret"
   value        = confluent_api_key.staging-admin.secret
   category     = "env"
   sensitive    = true
