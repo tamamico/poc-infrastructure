@@ -8,59 +8,6 @@ resource "tfe_workspace" "terraform-teams" {
   }
 }
 
-data "confluent_service_account" "staging-admin" {
-  display_name = "staging-admin"
-}
-
-resource "confluent_api_key" "staging-admin" {
-  display_name = data.confluent_service_account.staging-admin.display_name
-  description  = "API key for Staging admin service account in teams workspace"
-
-  owner {
-    id          = data.confluent_service_account.staging-admin.id
-    api_version = data.confluent_service_account.staging-admin.api_version
-    kind        = data.confluent_service_account.staging-admin.kind
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "tfe_variable" "confluent-cloud-api-key" {
-  key          = "CONFLUENT_CLOUD_API_KEY"
-  value        = confluent_api_key.staging-admin.id
-  category     = "env"
-  description  = "Confluent Cloud API key"
-  workspace_id = tfe_workspace.terraform-teams.id
-}
-
-resource "tfe_variable" "confluent-cloud-api-secret" {
-  key          = "CONFLUENT_CLOUD_API_SECRET"
-  value        = confluent_api_key.staging-admin.secret
-  category     = "env"
-  sensitive    = true
-  description  = "Confluent Cloud API secret"
-  workspace_id = tfe_workspace.terraform-teams.id
-}
-
-resource "tfe_variable" "kafka-api-key" {
-  key          = "KAFKA_API_KEY"
-  value        = confluent_api_key.staging-admin.id
-  category     = "env"
-  description  = "Staging Kafka broker API key"
-  workspace_id = tfe_workspace.terraform-teams.id
-}
-
-resource "tfe_variable" "kafka-api-secret" {
-  key          = "KAFKA_API_SECRET"
-  value        = confluent_api_key.staging-admin.secret
-  category     = "env"
-  sensitive    = true
-  description  = "Staging Kafka broker API secret"
-  workspace_id = tfe_workspace.terraform-teams.id
-}
-
 variable "github_token" {
   type        = string
   sensitive   = true
