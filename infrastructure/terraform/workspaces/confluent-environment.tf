@@ -15,13 +15,13 @@ resource "confluent_service_account" "terraform" {
   description  = "Main Terraform Cloud service account"
 }
 
-resource "confluent_role_binding" "terraform" {
+resource "confluent_role_binding" "terraform-environment" {
   principal   = "User:${confluent_service_account.terraform.id}"
   role_name   = "EnvironmentAdmin"
   crn_pattern = data.confluent_environment.staging.resource_name
 }
 
-resource "confluent_role_binding" "terraform" {
+resource "confluent_role_binding" "terraform-cluster" {
   principal   = "User:${confluent_service_account.terraform.id}"
   role_name   = "CloudClusterAdmin"
   crn_pattern = data.confluent_kafka_cluster.staging.rbac_crn
