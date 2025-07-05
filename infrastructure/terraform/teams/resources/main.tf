@@ -86,6 +86,16 @@ resource "confluent_api_key" "team-admin" {
     api_version = confluent_service_account.team-admin.api_version
     kind        = confluent_service_account.team-admin.kind
   }
+
+  managed_resource {
+    id          = data.confluent_kafka_cluster.staging.id
+    api_version = data.confluent_kafka_cluster.staging.api_version
+    kind        = data.confluent_kafka_cluster.staging.kind
+
+    environment {
+      id = data.confluent_environment.staging.id
+    }
+  }
 }
 
 resource "confluent_kafka_acl" "create-topics" {
