@@ -44,10 +44,6 @@ resource "confluent_api_key" "staging-admin" {
     api_version = confluent_service_account.staging-admin.api_version
     kind        = confluent_service_account.staging-admin.kind
   }
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "confluent_role_binding" "staging-admin-cluster" {
