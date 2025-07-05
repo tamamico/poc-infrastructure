@@ -98,6 +98,25 @@ resource "confluent_api_key" "team-admin" {
   }
 }
 
+data "confluent_service_account" "staging-admin" {
+  display_name = "staging-admin"
+}
+
+resource "confluent_api_key" "staging-admin" {
+  display_name = data.confluent_service_account.staging-admin.display_name
+  description  = "API key for Staging admin service account in teams workspace"
+
+  owner {
+    id          = data.confluent_service_account.staging-admin.id
+    api_version = data.confluent_service_account.staging-admin.api_version
+    kind        = data.confluent_service_account.staging-admin.kind
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 resource "confluent_kafka_acl" "create-topics" {
   resource_type = "TOPIC"
   resource_name = "es.ecristobal.${var.name}"
@@ -106,6 +125,12 @@ resource "confluent_kafka_acl" "create-topics" {
   host          = "*"
   operation     = "CREATE"
   permission    = "ALLOW"
+  rest_endpoint = data.confluent_kafka_cluster.staging.rest_endpoint
+
+  credentials {
+    key    = confluent_api_key.staging-admin.id
+    secret = confluent_api_key.staging-admin.secret
+  }
 }
 
 resource "tfe_variable" "staging-broker-id" {
