@@ -15,16 +15,12 @@ resource "confluent_service_account" "terraform" {
   description  = "Main Terraform Cloud service account"
 }
 
-resource "confluent_role_binding" "terraform-environment" {
-  principal   = "User:${confluent_service_account.terraform.id}"
-  role_name   = "EnvironmentAdmin"
-  crn_pattern = data.confluent_environment.staging.resource_name
-}
+data "confluent_organization" "sagittec" {}
 
-resource "confluent_role_binding" "terraform-cluster" {
+resource "confluent_role_binding" "terraform-admin-organization" {
   principal   = "User:${confluent_service_account.terraform.id}"
-  role_name   = "CloudClusterAdmin"
-  crn_pattern = data.confluent_kafka_cluster.staging.rbac_crn
+  role_name   = "OrganizationAdmin"
+  crn_pattern = data.confluent_organization.sagittec.resource_name
 }
 
 resource "confluent_api_key" "terraform" {
