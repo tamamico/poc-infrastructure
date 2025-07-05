@@ -81,14 +81,14 @@ data "tfe_team" "team" {
   organization = data.tfe_organization.sagittec.name
 }
 
-resource "tfe_team_token" "github-actions" {
+resource "tfe_team_token" "teams" {
   team_id     = data.tfe_team.team.id
-  description = "GitHub Actions token for teams workspace"
+  description = "Terraform token for teams workspace"
 }
 
-resource "tfe_variable" "terraform-token" {
+resource "tfe_variable" "teams" {
   key          = "TFE_TOKEN"
-  value        = tfe_team_token.github-actions.token
+  value        = tfe_team_token.teams.token
   category     = "env"
   sensitive    = true
   description  = "Terraform Cloud token"

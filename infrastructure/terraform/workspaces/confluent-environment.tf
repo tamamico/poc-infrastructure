@@ -54,3 +54,17 @@ resource "tfe_variable" "terraform-api-secret" {
   description  = "Confluent Cloud API secret"
   workspace_id = tfe_workspace.confluent-environment.id
 }
+
+resource "tfe_team_token" "confluent" {
+  team_id     = data.tfe_team.team.id
+  description = "Terraform token for confluent workspace"
+}
+
+resource "tfe_variable" "confluent" {
+  key          = "TFE_TOKEN"
+  value        = tfe_team_token.confluent.token
+  category     = "env"
+  sensitive    = true
+  description  = "Terraform Cloud token"
+  workspace_id = tfe_workspace.confluent-environment.id
+}
