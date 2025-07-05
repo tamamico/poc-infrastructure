@@ -75,7 +75,7 @@ data "tfe_workspace" "teams" {
   organization = data.tfe_organization.sagittec.name
 }
 
-resource "tfe_variable" "terraform-api-key" {
+resource "tfe_variable" "confluent-api-key" {
   key          = "CONFLUENT_CLOUD_API_KEY"
   value        = confluent_api_key.staging-admin.id
   category     = "env"
@@ -83,7 +83,7 @@ resource "tfe_variable" "terraform-api-key" {
   workspace_id = data.tfe_workspace.teams.id
 }
 
-resource "tfe_variable" "terraform-api-secret" {
+resource "tfe_variable" "confluent-api-secret" {
   key          = "CONFLUENT_CLOUD_API_SECRET"
   value        = confluent_api_key.staging-admin.secret
   category     = "env"
@@ -92,7 +92,7 @@ resource "tfe_variable" "terraform-api-secret" {
   workspace_id = data.tfe_workspace.teams.id
 }
 
-resource "tfe_variable" "terraform-api-key" {
+resource "tfe_variable" "kafka-api-key" {
   key          = "KAFKA_API_KEY"
   value        = confluent_api_key.staging-admin.id
   category     = "env"
@@ -100,7 +100,7 @@ resource "tfe_variable" "terraform-api-key" {
   workspace_id = data.tfe_workspace.teams.id
 }
 
-resource "tfe_variable" "terraform-api-secret" {
+resource "tfe_variable" "kafka-api-secret" {
   key          = "KAFKA_API_SECRET"
   value        = confluent_api_key.staging-admin.secret
   category     = "env"
