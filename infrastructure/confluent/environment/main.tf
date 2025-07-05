@@ -35,7 +35,7 @@ resource "confluent_service_account" "staging-admin" {
   description  = "Staging admin service account"
 }
 
-resource "confluent_api_key" "staging-admin" {
+resource "confluent_api_key" "staging-admin-cloud" {
   display_name = "staging-admin"
   description  = "API key for staging admin service account"
 
@@ -43,6 +43,27 @@ resource "confluent_api_key" "staging-admin" {
     id          = confluent_service_account.staging-admin.id
     api_version = confluent_service_account.staging-admin.api_version
     kind        = confluent_service_account.staging-admin.kind
+  }
+}
+
+resource "confluent_api_key" "staging-admin-kafka" {
+  display_name = "staging-admin"
+  description  = "API key for staging admin service account"
+
+  owner {
+    id          = confluent_service_account.staging-admin.id
+    api_version = confluent_service_account.staging-admin.api_version
+    kind        = confluent_service_account.staging-admin.kind
+  }
+
+  managed_resource {
+    id          = confluent_kafka_cluster.poc.id
+    api_version = confluent_kafka_cluster.poc.api_version
+    kind        = confluent_kafka_cluster.poc.kind
+
+    environment {
+      id = confluent_environment.staging.id
+    }
   }
 }
 
@@ -83,7 +104,7 @@ data "tfe_workspace" "teams" {
 
 resource "tfe_variable" "confluent-api-key" {
   key          = "CONFLUENT_CLOUD_API_KEY"
-  value        = confluent_api_key.staging-admin.id
+  value        = confluent_api_key.staging-admin-cloud.id
   category     = "env"
   description  = "Confluent Cloud API key"
   workspace_id = data.tfe_workspace.teams.id
@@ -91,7 +112,7 @@ resource "tfe_variable" "confluent-api-key" {
 
 resource "tfe_variable" "confluent-api-secret" {
   key          = "CONFLUENT_CLOUD_API_SECRET"
-  value        = confluent_api_key.staging-admin.secret
+  value        = confluent_api_key.staging-admin-cloud.secret
   category     = "env"
   sensitive    = true
   description  = "Confluent Cloud API secret"
@@ -116,7 +137,7 @@ resource "tfe_variable" "kafka-rest-endpoint" {
 
 resource "tfe_variable" "kafka-api-key" {
   key          = "KAFKA_API_KEY"
-  value        = confluent_api_key.staging-admin.id
+  value        = confluent_api_key.staging-admin-kafka.id
   category     = "env"
   description  = "Kafka API key"
   workspace_id = data.tfe_workspace.teams.id
@@ -124,7 +145,7 @@ resource "tfe_variable" "kafka-api-key" {
 
 resource "tfe_variable" "kafka-api-secret" {
   key          = "KAFKA_API_SECRET"
-  value        = confluent_api_key.staging-admin.secret
+  value        = confluent_api_key.staging-admin-kafka.secret
   category     = "env"
   sensitive    = true
   description  = "Kafka API secret"
