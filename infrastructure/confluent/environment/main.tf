@@ -97,3 +97,19 @@ resource "tfe_variable" "confluent-api-secret" {
   description  = "Confluent Cloud API secret"
   workspace_id = data.tfe_workspace.teams.id
 }
+
+resource "tfe_variable" "kafka-id" {
+  key          = "KAFKA_ID"
+  value        = confluent_kafka_cluster.poc.id
+  category     = "env"
+  description  = "Staging cluster ID"
+  workspace_id = data.tfe_workspace.teams.id
+}
+
+resource "tfe_variable" "kafka-rest-endpoint" {
+  key          = "KAFKA_REST_ENDPOINT"
+  value        = confluent_kafka_cluster.poc.rest_endpoint
+  category     = "env"
+  description  = "Staging cluster ID"
+  workspace_id = data.tfe_workspace.teams.id
+}
