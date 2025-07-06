@@ -84,11 +84,15 @@ resource "confluent_service_account" "team-admin" {
   description  = "Service Account for team ${each.key} in ${data.confluent_environment.staging.display_name}"
 }
 
-resource "confluent_role_binding" "team-admin-topics" {
-  for_each    = local.teams
-  principal   = "User:${confluent_service_account.team-admin[each.key].id}"
-  role_name   = "ResourceOwner"
-  crn_pattern = "${data.confluent_kafka_cluster.staging.rbac_crn}/kafka=${data.confluent_kafka_cluster.staging.id}/topic=es.ecristobal.${each.key}.*"
+resource "confluent_kafka_acl" "create-topics" {
+  for_each      = local.teams
+  resource_type = "TOPIC"
+  resource_name = "es.ecristobal.${each.key}"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.team-admin[each.key].id}"
+  host          = "*"
+  operation     = "ALL"
+  permission    = "ALLOW"
 }
 
 resource "tfe_variable" "staging-broker-id" {
