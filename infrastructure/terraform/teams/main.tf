@@ -92,8 +92,8 @@ resource "confluent_role_binding" "team-admin-topics" {
   role_name = "ResourceOwner"
   crn_pattern = format(
     <<-EOT
-      crn://confluent.cloud/organization=%s[1]/environment=%s[2]/cloud-cluster=%s[3]/kafka=%s[3]/
-      topic=es.ecristobal.%s[4].*
+      crn://confluent.cloud/organization=%[1]s/environment=%[2]s/cloud-cluster=%[3]s/kafka=%[3]s/
+      topic=es.ecristobal.%[4]s.*
     EOT
     ,
     data.confluent_organization.sagittec.id,
