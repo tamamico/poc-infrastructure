@@ -84,12 +84,17 @@ resource "confluent_service_account" "team-admin" {
   description  = "Service Account for team ${each.key} in ${data.confluent_environment.staging.display_name}"
 }
 
+data "confluent_organization" "sagittec" {}
+
 resource "confluent_role_binding" "team-admin-topics" {
   for_each  = local.teams
   principal = "User:${confluent_service_account.team-admin[each.key].id}"
   role_name = "ResourceOwner"
   crn_pattern = format(
-    "crn://confluent.cloud/kafka=%s/topic=es.ecristobal.%s.*",
+    "crn://confluent.cloud/organization=%s/environment=%s/cloud-cluster=%s/kafka=%s/topic=es.ecristobal.%s.*",
+    data.confluent_organization.sagittec.id,
+    data.confluent_environment.staging.id,
+    data.confluent_kafka_cluster.staging.id,
     data.confluent_kafka_cluster.staging.id,
     each.key
   )
