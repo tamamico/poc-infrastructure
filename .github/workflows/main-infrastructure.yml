@@ -1,12 +1,13 @@
-name: Update Confluent Cloud infrastructure
+name: Update infrastructure
 
 on:
   push:
     branches:
       - main
     paths:
+      - 'infrastructure/terraform/**'
       - 'infrastructure/confluent/**'
-      - '.github/workflows/main-infra-confluent.yml'
+      - 'main-infrastructure.yml'
       - '.github/actions/terraform/action.yml'
   workflow_dispatch:
 
@@ -34,8 +35,8 @@ jobs:
           args: >
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
-  update-confluent:
-    name: Update Confluent Cloud infrastructure
+  update-terraform:
+    name: Update Terraform Cloud
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,26 +44,24 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'true'
-      - name: Set-up staging environment
+      - name: Set-up Confluent Cloud workspace in Terraform Cloud
+        uses: ./.github/actions/terraform
+        with:
+          provider: terraform
+          resource: workspaces
+          token: ${{ secrets.TFE_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+      - name: Set-up staging environment in Confluent Cloud
         uses: ./.github/actions/terraform
         with:
           provider: confluent
           resource: environment
           token: ${{ secrets.TFE_TOKEN }}
           organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
-#      - name: Copy Avro schemas to schema-registry folder
-#        run: cp ./poc-spring-cloud-stream-native/code/src/main/avro/*.avsc ./infrastructure/confluent/schema-registry
-#      - name: Set-up Schema Registry
-#        uses: ./.github/actions/terraform
-#        with:
-#          provider: confluent
-#          resource: schema-registry
-#          token: ${{ secrets.TFE_TOKEN }}
-#          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
-#      - name: Set-up topics
-#        uses: ./.github/actions/terraform
-#        with:
-#          provider: confluent
-#          resource: topics
-#          token: ${{ secrets.TFE_TOKEN }}
-#          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}
+      - name: Set-up teams workspaces in Terraform Cloud
+        uses: ./.github/actions/terraform
+        with:
+          provider: terraform
+          resource: teams
+          token: ${{ secrets.TFE_TOKEN }}
+          organization: ${{ vars.TF_CLOUD_ORGANIZATION }}

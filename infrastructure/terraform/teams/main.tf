@@ -84,6 +84,13 @@ resource "confluent_service_account" "team-admin" {
   description  = "Service Account for team ${each.key} in ${data.confluent_environment.staging.display_name}"
 }
 
+resource "confluent_role_binding" "team-admin-topics" {
+  for_each    = local.teams
+  principal   = "User:${confluent_service_account.team-admin[each.key].id}"
+  role_name   = "ResourceKeyAdmin"
+  crn_pattern = "crn://confluent.cloud/kafka=${data.confluent_kafka_cluster.staging.id}/topic=es.ecristobal.${each.key}*"
+}
+
 resource "confluent_api_key" "team-admin" {
   for_each     = local.teams
   display_name = "${each.key}-${data.confluent_environment.staging.display_name}"
@@ -94,59 +101,20 @@ resource "confluent_api_key" "team-admin" {
     api_version = confluent_service_account.team-admin[each.key].api_version
     kind        = confluent_service_account.team-admin[each.key].kind
   }
-
-  managed_resource {
-    id          = data.confluent_kafka_cluster.staging.id
-    api_version = data.confluent_kafka_cluster.staging.api_version
-    kind        = data.confluent_kafka_cluster.staging.kind
-
-    environment {
-      id = data.confluent_environment.staging.id
-    }
-  }
 }
 
-resource "confluent_kafka_acl" "create-topics" {
-  for_each      = local.teams
-  resource_type = "TOPIC"
-  resource_name = "es.ecristobal.${each.key}"
-  pattern_type  = "PREFIXED"
-  principal     = "User:${confluent_service_account.team-admin[each.key].id}"
-  host          = "*"
-  operation     = "CREATE"
-  permission    = "ALLOW"
-}
-
-resource "tfe_variable" "staging-broker-id" {
+resource "tfe_variable" "team-admin-api-key" {
   for_each     = local.teams
-  key          = "KAFKA_ID"
-  value        = data.confluent_kafka_cluster.staging.id
-  category     = "env"
-  description  = "Staging Kafka broker ID"
-  workspace_id = tfe_workspace.workspace[each.key].id
-}
-
-resource "tfe_variable" "staging-broker-rest-endpoint" {
-  for_each     = local.teams
-  key          = "KAFKA_REST_ENDPOINT"
-  value        = data.confluent_kafka_cluster.staging.rest_endpoint
-  category     = "env"
-  description  = "Staging Kafka broker REST endpoint"
-  workspace_id = tfe_workspace.workspace[each.key].id
-}
-
-resource "tfe_variable" "staging-admin-api-key" {
-  for_each     = local.teams
-  key          = "KAFKA_API_KEY"
+  key          = "CONFLUENT_CLOUD_API_KEY"
   value        = confluent_api_key.team-admin[each.key].id
   category     = "env"
   description  = "${each.key} admin API key"
   workspace_id = tfe_workspace.workspace[each.key].id
 }
 
-resource "tfe_variable" "staging-admin-api-secret" {
+resource "tfe_variable" "team-admin-api-secret" {
   for_each     = local.teams
-  key          = "KAFKA_API_SECRET"
+  key          = "CONFLUENT_CLOUD_API_SECRET"
   value        = confluent_api_key.team-admin[each.key].secret
   category     = "env"
   sensitive    = true
