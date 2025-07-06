@@ -61,7 +61,7 @@ resource "confluent_role_binding" "staging-admin-environment" {
 }
 
 resource "confluent_role_binding" "staging-admin" {
-  for_each = toset(["ResourceOwner", "ResourceKeyAdmin"])
+  for_each = toset(["CloudClusterAdmin", "ResourceKeyAdmin"])
   principal   = "User:${confluent_service_account.staging-admin.id}"
   role_name   = each.key
   crn_pattern = confluent_kafka_cluster.poc.rbac_crn
