@@ -46,18 +46,6 @@ resource "confluent_api_key" "staging-admin" {
   }
 }
 
-resource "confluent_role_binding" "staging-admin-environment" {
-  principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "EnvironmentAdmin"
-  crn_pattern = confluent_environment.staging.resource_name
-}
-
-resource "confluent_role_binding" "staging-admin-cluster" {
-  principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "CloudClusterAdmin"
-  crn_pattern = confluent_kafka_cluster.poc.rbac_crn
-}
-
 data "confluent_organization" "sagittec" {}
 
 resource "confluent_role_binding" "staging-admin-account" {
@@ -66,10 +54,17 @@ resource "confluent_role_binding" "staging-admin-account" {
   crn_pattern = data.confluent_organization.sagittec.resource_name
 }
 
-resource "confluent_role_binding" "staging-admin-key" {
+resource "confluent_role_binding" "staging-admin-environment" {
   principal   = "User:${confluent_service_account.staging-admin.id}"
-  role_name   = "ResourceKeyAdmin"
-  crn_pattern = data.confluent_organization.sagittec.resource_name
+  role_name   = "EnvironmentAdmin"
+  crn_pattern = confluent_environment.staging.resource_name
+}
+
+resource "confluent_role_binding" "staging-admin" {
+  for_each = toset("ResourceOwner", "ResourceKeyAdmin")
+  principal   = "User:${confluent_service_account.staging-admin.id}"
+  role_name   = each.key
+  crn_pattern = confluent_kafka_cluster.poc.rbac_crn
 }
 
 data "tfe_organization" "sagittec" {
