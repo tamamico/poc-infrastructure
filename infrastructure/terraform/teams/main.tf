@@ -84,7 +84,7 @@ resource "confluent_service_account" "team-admin" {
   description  = "Service Account for team ${each.key} in ${data.confluent_environment.staging.display_name}"
 }
 
-resource "confluent_kafka_acl" "create-topics" {
+resource "confluent_kafka_acl" "topics" {
   for_each      = local.teams
   resource_type = "TOPIC"
   resource_name = "es.ecristobal.${each.key}"
