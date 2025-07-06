@@ -90,17 +90,14 @@ resource "confluent_role_binding" "team-admin-topics" {
   for_each  = local.teams
   principal = "User:${confluent_service_account.team-admin[each.key].id}"
   role_name = "ResourceOwner"
-  crn_pattern = format(
-    <<-EOT
-      crn://confluent.cloud/organization=%[1]s/environment=%[2]s/cloud-cluster=%[3]s/kafka=%[3]s/
-      topic=es.ecristobal.%[4]s.*
+  crn_pattern = <<-EOT
+      crn://confluent.cloud
+      /organization=${data.confluent_organization.sagittec.id}
+      /environment=${data.confluent_environment.staging.id}
+      /cloud-cluster=${data.confluent_kafka_cluster.staging.id}
+      /kafka=${data.confluent_kafka_cluster.staging.id}
+      /topic=es.ecristobal.${each.key}
     EOT
-    ,
-    data.confluent_organization.sagittec.id,
-    data.confluent_environment.staging.id,
-    data.confluent_kafka_cluster.staging.id,
-    each.key
-  )
 }
 
 resource "tfe_variable" "staging-broker-id" {
