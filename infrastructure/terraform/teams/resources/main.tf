@@ -135,7 +135,7 @@ resource "confluent_api_key" "team-admin" {
 resource "tfe_variable" "staging-admin-api-key" {
   for_each     = var.repositories
   key          = "KAFKA_API_KEY"
-  value        = confluent_api_key.team-admin[each.key].id
+  value        = confluent_api_key.team-admin.id
   category     = "env"
   description  = "${each.key} admin API key"
   workspace_id = tfe_workspace.workspace[each.key].id
@@ -144,7 +144,7 @@ resource "tfe_variable" "staging-admin-api-key" {
 resource "tfe_variable" "staging-admin-api-secret" {
   for_each     = var.repositories
   key          = "KAFKA_API_SECRET"
-  value        = confluent_api_key.team-admin[each.key].secret
+  value        = confluent_api_key.team-admin.secret
   category     = "env"
   sensitive    = true
   description  = "${each.key} admin API secret"
