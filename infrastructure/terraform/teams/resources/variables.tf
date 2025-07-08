@@ -5,7 +5,7 @@ variable "name" {
 }
 
 variable "repositories" {
-  type = list(string)
+  type = set(string)
   nullable    = false
   description = "Team repositories to set-up Terraform token"
 }
