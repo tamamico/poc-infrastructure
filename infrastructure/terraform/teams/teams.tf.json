@@ -1,0 +1,11 @@
+{
+  "locals": {
+    "teams": {
+      "alpha": {
+        "repositories": [
+          "tamamico/poc-team"
+        ]
+      }
+    }
+  }
+}
