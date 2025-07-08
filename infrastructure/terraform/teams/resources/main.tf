@@ -62,7 +62,7 @@ resource "github_actions_variable" "terraform-organization" {
 
 resource "tfe_workspace" "workspace" {
   for_each     = var.repositories
-  name = format("%s-%s", var.name, split(each.key, "/")[1])
+  name = join("-", var.name, split("/", each.key)[1])
   description  = "Workspace for team ${var.name} and repository ${each.key}"
   organization = data.tfe_organization.sagittec.name
 
