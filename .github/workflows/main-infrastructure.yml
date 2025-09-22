@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Run SonarCloud analysis
-        uses: sonarsource/sonarqube-scan-action@v5.3.1
+        uses: sonarsource/sonarqube-scan-action@v6.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
